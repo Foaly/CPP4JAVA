@@ -1,6 +1,7 @@
 #include "fix_point.hpp"
 #include <cassert>
 #include <cmath>
+#include <iostream>
 
 int main()
 {
@@ -36,27 +37,31 @@ int main()
     assert( fp1 * fp2 == -25.5f    );
     assert( fp1 / fp2 == -1.59375f );
 
-//    // ----------------------------------------------------------
-//    // arithmetics assignment
+    // ----------------------------------------------------------
+    // arithmetics assignment
     fix_point
     fp3 = fp1;  fp3 += fp2;     assert( fp3 ==  2.375f   );
     fp3 = fp1;  fp3 -= fp2;     assert( fp3 ==  10.375f  );
     fp3 = fp1;  fp3 *= fp2;     assert( fp3 == -25.5f    );
     fp3 = fp1;  fp3 /= fp2;     assert( fp3 == -1.59375f );
 
-//    // ----------------------------------------------------------
-//    // pre/post - increment/decrement
-//    fp3 = fp1;  assert( ++fp3 ==  7.375f );
-//    fp3 = fp1;  assert( --fp3 ==  5.375f );
-//    fp3 = fp1;  assert( fp3++ ==  6.375f  );  assert( fp3 ==  7.375f  );
-//    fp3 = fp1;  assert( fp3-- ==  6.375f  );  assert( fp3 ==  5.375f  );
+    // ----------------------------------------------------------
+    // pre/post - increment/decrement
+    fp3 = fp1;  assert( ++fp3 ==  7.375f );
+    fp3 = fp1;  assert( --fp3 ==  5.375f );
+    fp3 = fp1;  assert( fp3++ ==  6.375f  );  assert( fp3 ==  7.375f  );
+    fp3 = fp1;  assert( fp3-- ==  6.375f  );  assert( fp3 ==  5.375f  );
 
-//    // ----------------------------------------------------------
-//    // trigonometric functions
-//    assert( sin(fix_point(0.5f)) == fix_point(sin(0.5f)) );
-//    assert( cos(fix_point(0.5f)) == fix_point(cos(0.5f)) );
+    // ----------------------------------------------------------
+    // trigonometric functions
 
-//    // ----------------------------------------------------------
+    std::cout << cos(fix_point(2.0)) << std::endl;
+    std::cout << std::cos(2.0) << std::endl;
+
+    assert( sin(fix_point(0.5f)) == fix_point(sin(0.5f)) );
+    assert( cos(fix_point(0.5f)) == fix_point(cos(0.5f)) );
+
+    // ----------------------------------------------------------
     // check some more numbers
     for ( float f = 0.f ; f <= 1.f ; f += 0.25f )   assert( fix_point(f) == f );
 }

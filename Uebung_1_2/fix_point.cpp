@@ -30,6 +30,46 @@ fix_point& fix_point::operator = (float value)
 }
 
 
+fix_point& fix_point::operator ++ ()
+{
+    m_data += toFixPointInt(1.f);
+    return (*this);
+}
+
+
+fix_point& fix_point::operator -- ()
+{
+    m_data -= toFixPointInt(1.f);
+    return (*this);
+}
+
+
+fix_point fix_point::operator ++ (int)
+{
+    // make a copy
+    fix_point result(m_data);
+
+    // increment
+    ++(*this);
+
+    // return the copy
+    return result;
+}
+
+
+fix_point fix_point::operator -- (int)
+{
+    // make a copy
+    fix_point result(m_data);
+
+    // decrement
+    --(*this);
+
+    // return the copy
+    return result;
+}
+
+
 std::int32_t fix_point::getData() const
 {
     return m_data;
@@ -46,11 +86,7 @@ float fix_point::frac() const
     const std::int32_t trailingPart = m_data & mask;
 
     // convert Q16.16 int to float
-    // taken from here: https://en.wikipedia.org/wiki/Q_%28number_format%29#Conversion
-    float floatValue = static_cast<float>(trailingPart);
-    floatValue = floatValue * std::pow(2, -16);
-
-    return floatValue;
+    return intToFloat(trailingPart);
 }
 
 
@@ -189,3 +225,69 @@ float frac(fix_point value)
 }
 
 
+float intToFloat(std::int32_t value)
+{
+    // convert Q16.16 int to float
+    // taken from here: https://en.wikipedia.org/wiki/Q_%28number_format%29#Conversion
+    float floatValue = static_cast<float>(value);
+    floatValue *= std::pow(2, -16);
+    return floatValue;
+}
+
+
+// anonymous namespace; the functions inside it are only available inside this file
+namespace
+{
+    /**
+     * @brief factorial Calculates the factorial of n
+     */
+    unsigned int factorial(unsigned int n)
+    {
+        if (n == 0)
+           return 1;
+        return n * factorial(n - 1);
+    }
+}
+
+
+float sin(fix_point value)
+{
+    const float x = intToFloat(value.getData());
+
+    /**
+     * Something here is still fucky. If value is bigger than 2
+     * the results go towards negative infinity. If I increase
+     * n it results in nan.
+     *
+     * The whole revolution ( 2pi or 6.28) should be covert. Also
+     * a modulo should be applyed to to x so it falls into that range
+     */
+
+    float sum = 0.f;
+    for(int n = 0; n < 10; n++)
+    {
+        const int term = 2 * n + 1;
+        sum += std::pow(-1, n) * std::pow(x, term) / factorial(term);
+    }
+
+    return sum;
+}
+
+
+float cos(fix_point value)
+{
+    const float x = intToFloat(value.getData());
+
+    /**
+     * Same precision issues as with sin
+     */
+
+    float sum = 0.f;
+    for(int n = 0; n < 10; n++)
+    {
+        const int term = 2 * n;
+        sum += std::pow(-1, n) * std::pow(x, term) / factorial(term);
+    }
+
+    return sum;
+}

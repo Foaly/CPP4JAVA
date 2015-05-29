@@ -14,7 +14,16 @@ public:
     fix_point(double value);
     fix_point(std::int32_t value); // takes an int in the format Q16.16
 
+    /**
+     * Member operators
+     */
     fix_point& operator = (float value);
+
+    fix_point& operator ++ (); // prefix
+    fix_point& operator --(); // prefix
+
+    fix_point operator ++ (int); // postfix
+    fix_point operator -- (int); // postfix
 
     /**
      * @brief Get the fix_point numbers data in the format Q16.16. The first 16 bit represent
@@ -73,5 +82,22 @@ float floor(fix_point value);
  * @param value The given fix_point number
  */
 float frac(fix_point value);
+
+/**
+ * @brief toFloat Convert a int in the format Q16.16 to a float
+ */
+float intToFloat(std::int32_t value);
+
+/**
+ * @brief sin Calculate the sin of the given value using the taylor series
+ * @param value The given fix_point number
+ */
+float sin(fix_point value);
+
+/**
+ * @brief cos Calculate the cos of the given value using the taylor series
+ * @param value The given fix_point number
+ */
+float cos(fix_point value);
 
 #endif // FIX_POINT_H
