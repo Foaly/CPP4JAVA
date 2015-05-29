@@ -151,7 +151,7 @@ fix_point div(fix_point lhs, fix_point rhs)
     // https://en.wikipedia.org/wiki/Q_%28number_format%29#Division
 
     // pre-multiply by the base
-    std::int64_t temp = static_cast<std::int64_t>(lhs.data) << 16;
+    const std::int64_t temp = static_cast<std::int64_t>(lhs.data) << 16;
 
     // and divide
     const std::int32_t result = temp / rhs.data;
