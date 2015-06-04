@@ -10,9 +10,10 @@ public:
     /**
      * Constructors
      */
+    fix_point();
     fix_point(float value);
     fix_point(double value);
-    fix_point(std::int32_t value); // takes an int in the format Q16.16
+    explicit fix_point(std::int32_t value); // takes an int in the format Q16.16
 
     /**
      * Member operators
@@ -20,10 +21,16 @@ public:
     fix_point& operator = (float value);
 
     fix_point& operator ++ (); // prefix
-    fix_point& operator --(); // prefix
+    fix_point& operator -- (); // prefix
 
     fix_point operator ++ (int); // postfix
     fix_point operator -- (int); // postfix
+
+    /**
+     * Cast operators
+     */
+    explicit operator float() const;
+    explicit operator int() const;
 
     /**
      * @brief Get the fix_point numbers data in the format Q16.16. The first 16 bit represent
@@ -36,6 +43,11 @@ public:
      * @brief Get the trailing part (part after the comma) of the fix_point number
      */
     float frac() const;
+
+    /**
+     * @brief Get the leading part (part before the comma) of the fix_point number
+     */
+    float floor() const;
 
 
 

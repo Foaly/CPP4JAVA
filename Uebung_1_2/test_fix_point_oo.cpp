@@ -61,6 +61,9 @@ int main()
     assert( sin(fix_point(0.5f)) == fix_point(sin(0.5f)) );
     assert( cos(fix_point(0.5f)) == fix_point(cos(0.5f)) );
 
+    std::cout << "Cast to float: " << static_cast<float>(fp1) << std::endl;
+    std::cout << "Cast to int: " << static_cast<int>(fp1) << std::endl;
+
     // ----------------------------------------------------------
     // check some more numbers
     for ( float f = 0.f ; f <= 1.f ; f += 0.25f )   assert( fix_point(f) == f );

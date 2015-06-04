@@ -2,6 +2,13 @@
 
 #include <cmath>
 
+fix_point::fix_point() :
+    m_data(0)
+{
+
+}
+
+
 fix_point::fix_point(float value) :
     m_data(toFixPointInt(value))
 {
@@ -70,6 +77,18 @@ fix_point fix_point::operator -- (int)
 }
 
 
+fix_point::operator float() const
+{
+    return intToFloat(m_data);
+}
+
+
+fix_point::operator int() const
+{
+    return static_cast<int>(floor());
+}
+
+
 std::int32_t fix_point::getData() const
 {
     return m_data;
@@ -90,6 +109,16 @@ float fix_point::frac() const
 }
 
 
+float fix_point::floor() const
+{
+    // the part before the comma is in the top 16 bit, so simply
+    // shift 16 bit to the left the rest is automatically padded with 0
+    const std::int32_t result = m_data >> 16;
+
+    return static_cast<float>(result);
+}
+
+
 std::int32_t fix_point::toFixPointInt(float value)
 {
     // taken from https://en.wikipedia.org/wiki/Q_%28number_format%29#Conversion
@@ -98,6 +127,11 @@ std::int32_t fix_point::toFixPointInt(float value)
     return static_cast<std::int32_t>(value);
 }
 
+
+
+///////////////
+///  Operators
+///////////////
 
 bool operator == (const fix_point& lhs, const fix_point& rhs)
 {
@@ -211,11 +245,7 @@ fix_point& operator /= (fix_point& lhs, const fix_point& rhs)
 
 float floor(fix_point value)
 {
-    // the part before the comma is in the top 16 bit, so simply
-    // shift 16 bit to the left the rest is automatically padded with 0
-    std::int32_t result = value.getData() >> 16;
-
-    return static_cast<float>(result);
+    return value.floor();
 }
 
 
