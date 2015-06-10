@@ -18,7 +18,7 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp \
-    fixpoint.cpp
+    fixpoint.inl
 
 HEADERS += \
     fixpoint.hpp

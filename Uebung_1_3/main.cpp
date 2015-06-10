@@ -1,6 +1,7 @@
 #include "fixpoint.hpp"
 #include <cassert>
 #include <cmath>
+#include <iostream>
 
 
 template< typename NumberType >
