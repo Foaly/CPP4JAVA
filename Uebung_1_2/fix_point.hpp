@@ -102,14 +102,14 @@ float intToFloat(std::int32_t value);
 
 /**
  * @brief sin Calculate the sin of the given value using the taylor series
- * @param value The given fix_point number
+ * @param x The given fix_point number
  */
-float sin(fix_point value);
+fix_point sin(fix_point x);
 
 /**
  * @brief cos Calculate the cos of the given value using the taylor series
- * @param value The given fix_point number
+ * @param x The given fix_point number
  */
-float cos(fix_point value);
+fix_point cos(fix_point x);
 
 #endif // FIX_POINT_H

@@ -55,8 +55,8 @@ int main()
     // ----------------------------------------------------------
     // trigonometric functions
 
-    std::cout << cos(fix_point(2.0)) << std::endl;
-    std::cout << std::cos(2.0) << std::endl;
+    std::cout << static_cast<float>(sin(fix_point(0.5))) << std::endl;
+    std::cout << std::sin(0.5) << std::endl;
 
     assert( sin(fix_point(0.5f)) == fix_point(sin(0.5f)) );
     assert( cos(fix_point(0.5f)) == fix_point(cos(0.5f)) );

@@ -269,55 +269,31 @@ float intToFloat(std::int32_t value)
 namespace
 {
     /**
-     * @brief factorial Calculates the factorial of n
+     * @brief pow      Calculates the power of the given value
+     * @param value    The value
+     * @param exponent The number of times the value is multiplyed
      */
-    unsigned int factorial(unsigned int n)
+    fix_point pow(fix_point value, unsigned int exponent)
     {
-        if (n == 0)
-           return 1;
-        return n * factorial(n - 1);
+        fix_point product = value;
+
+        for(unsigned int i = 0; i < exponent - 1; i++)
+        {
+            product *= value;
+        }
+
+        return product;
     }
 }
 
 
-float sin(fix_point value)
+fix_point sin(fix_point x)
 {
-    const float x = intToFloat(value.getData());
-
-    /**
-     * Something here is still fucky. If value is bigger than 2
-     * the results go towards negative infinity. If I increase
-     * n it results in nan.
-     *
-     * The whole revolution ( 2pi or 6.28) should be covert. Also
-     * a modulo should be applyed to to x so it falls into that range
-     */
-
-    float sum = 0.f;
-    for(int n = 0; n < 10; n++)
-    {
-        const int term = 2 * n + 1;
-        sum += std::pow(-1, n) * std::pow(x, term) / factorial(term);
-    }
-
-    return sum;
+    return (x - (pow(x, 3) / fix_point(6.f)) + (pow(x, 5) / fix_point(120.f)) - (pow(x, 7) / fix_point(5040.f)));
 }
 
 
-float cos(fix_point value)
+fix_point cos(fix_point x)
 {
-    const float x = intToFloat(value.getData());
-
-    /**
-     * Same precision issues as with sin
-     */
-
-    float sum = 0.f;
-    for(int n = 0; n < 10; n++)
-    {
-        const int term = 2 * n;
-        sum += std::pow(-1, n) * std::pow(x, term) / factorial(term);
-    }
-
-    return sum;
+    return (fix_point(1.f) - (x*x / fix_point(2.f)) + (x*x*x*x / fix_point(24.f)) - (x*x*x*x*x*x / fix_point(720.f)) + (x*x*x*x*x*x*x*x / fix_point(40320.f)));
 }
