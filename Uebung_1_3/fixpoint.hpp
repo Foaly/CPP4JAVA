@@ -131,12 +131,18 @@ public:
     }
 
 
+    /**
+     * @brief Get the fix_point numbers data as an integer type.
+     */
     IntegerType getData() const
     {
         return m_data;
     }
 
 
+    /**
+     * @brief Get the leading part (part before the comma) of the fix_point number
+     */
     float floor() const
     {
         return m_data >> post;
@@ -164,6 +170,10 @@ private:
     IntegerType m_data;
 
 
+    /**
+     * @brief Convert a float to a fixpoint
+     * @param value The float to convert
+     */
     static IntegerType toFixPointInt(float value)
     {
         // taken from https://en.wikipedia.org/wiki/Q_%28number_format%29#Conversion
@@ -173,6 +183,10 @@ private:
     }
 
 
+    /**
+     * @brief Convert the given integer type to a float
+     * @param value The integer to convert
+     */
     static float intToFloat(IntegerType value)
     {
         // convert int to float
@@ -258,39 +272,5 @@ float frac(fixpointType value);
 
 
 #include "fixpoint.inl"
-
-
-//class fix_point
-//{
-//public:
-//    /**
-//     * Constructors
-//     */
-//    fix_point();
-//    fix_point(float value);
-//    fix_point(double value);
-//    explicit fix_point(std::int32_t value); // takes an int in the format Q16.16
-
-//    /**
-//     * Cast operators
-//     */
-//    explicit operator float() const;
-//    explicit operator int() const;
-
-
-//};
-
-
-///**
-// * @brief sin Calculate the sin of the given value using the taylor series
-// * @param value The given fix_point number
-// */
-//float sin(fix_point value);
-
-///**
-// * @brief cos Calculate the cos of the given value using the taylor series
-// * @param value The given fix_point number
-// */
-//float cos(fix_point value);
 
 #endif // FIX_POINT_H
