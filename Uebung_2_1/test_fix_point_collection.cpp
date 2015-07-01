@@ -1,4 +1,4 @@
-#include "fix_point_collection.h"
+#include "fix_point_collection.hpp"
 
 #include <cassert>
 
@@ -13,6 +13,8 @@ int main()
     collection.push_back(3.5f);
     collection.push_back(-2.25f);
     collection.push_back(3.5f);
+
+    collection.print();
 
     // check size
     size_t size = collection.size();

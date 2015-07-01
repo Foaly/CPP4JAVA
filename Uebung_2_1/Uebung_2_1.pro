@@ -12,6 +12,8 @@ TARGET = Uebung_2_1
 CONFIG   += console
 CONFIG   -= app_bundle
 
+QMAKE_CXXFLAGS += -std=c++11
+
 TEMPLATE = app
 
 
