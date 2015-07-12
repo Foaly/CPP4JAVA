@@ -3,6 +3,7 @@
 #include <iostream>
 #include <algorithm>
 #include <numeric>
+#include <cmath>
 
 fix_point_collection::fix_point_collection() :
     m_size(0)
@@ -113,12 +114,12 @@ fix_point fix_point_collection::operator[](const fix_point &index) const
     const float floatIndex = static_cast<float>(index);
     const int upperIndex = std::ceil(floatIndex);
     const int lowerIndex = std::floor(floatIndex);
-    const float t = floatIndex - lowerIndex;
+    const fix_point t = floatIndex - lowerIndex;
 
     const fix_point upperFP = m_collection[upperIndex];
     const fix_point lowerFP = m_collection[lowerIndex];
 
-    fix_point interpolation = (1.f - t) * lowerFP + t * upperFP;
+    fix_point interpolation = (fix_point(1.f) - t) * lowerFP + t * upperFP;
     return interpolation;
 }
 

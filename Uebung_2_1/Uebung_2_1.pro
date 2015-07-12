@@ -11,6 +11,7 @@ QT       -= gui
 TARGET = Uebung_2_1
 CONFIG   += console
 CONFIG   -= app_bundle
+CONFIG   += c++11
 
 QMAKE_CXXFLAGS += -std=c++11
 
