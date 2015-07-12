@@ -1,9 +1,10 @@
 #include <iostream>
 #include <vector>
 #include <thread>       // std::thread
-#include <mutex>        // std::mutex
+#include <mutex>        // std::mutex, std::lock_guard
 #include <numeric>      // std::inner_product, std::accumulate
 #include <cmath>        // std::floor
+#include <future>         // std::async, std::future
 
 #include "fix_point.hpp"
 #include "clock.hpp"
@@ -14,6 +15,7 @@ const unsigned int vectorSize = 65536;
 
 float calculateDotProduct(const std::vector<fix_point>& vec1, const std::vector<fix_point>& vec2);
 float calculateDotProductThreaded(const std::vector<fix_point>& vec1, const std::vector<fix_point>& vec2);
+float calculateDotProductAsync(const std::vector<fix_point>& vec1, const std::vector<fix_point>& vec2);
 
 
 int main()
@@ -34,8 +36,13 @@ int main()
 
     // calculate the dot product using threads
     Clock threadClock;
-    std::cout << "Thread dot products: " << calculateDotProductThreaded(vectorOne, vectorTwo) << std::endl;
-    std::cout << "Time to calcualte threaded dot product: " << threadClock.getElapsedTime().count() << " microseconds." << std::endl;
+    std::cout << "Thread dot product: " << calculateDotProductThreaded(vectorOne, vectorTwo) << std::endl;
+    std::cout << "Time to calcualte threaded dot product: " << threadClock.getElapsedTime().count() << " microseconds." << std::endl << std::endl;
+
+    // calculate the dot product using futures
+    Clock asyncClock;
+    std::cout << "Futures dot product: " << calculateDotProductAsync(vectorOne, vectorTwo) << std::endl;
+    std::cout << "Time to calcualte async dot product: " << asyncClock.getElapsedTime().count() << " microseconds." << std::endl << std::endl;
 
     return 0;
 }
@@ -95,6 +102,41 @@ float calculateDotProductThreaded(const std::vector<fix_point>& vec1, const std:
 
     // calculate the sum of the thread results
     fix_point result = std::accumulate(threadResults.begin(), threadResults.end(), fix_point(0.f));
+
+    return static_cast<float>(result);
+}
+
+
+// async function
+fix_point dotProductAsyncFunc(vectorIterator first1, vectorIterator last1, vectorIterator first2)
+{
+    // calculate dot product
+    return std::inner_product(first1, last1, first2, fix_point(0.f));
+}
+
+float calculateDotProductAsync(const std::vector<fix_point>& vec1, const std::vector<fix_point>& vec2)
+{
+    const unsigned int numberOfFutures = 8;
+
+    // caculate how many elements per future
+    const unsigned int stepSize = std::floor(vectorSize / numberOfFutures);
+
+    // create the futures
+    std::vector<std::future<fix_point>> futures;
+    futures.reserve(numberOfFutures);
+    for(unsigned int i = 0; i < numberOfFutures - 1; ++i)
+    {
+        //std::cout << "begin: " << stepSize * i << " end: " << stepSize * (i + 1) << std::endl;
+        futures.emplace_back(std::async(dotProductAsyncFunc, vec1.begin() + stepSize * i, vec1.begin() + stepSize * (i + 1), vec2.begin()));
+    }
+
+    //std::cout << "begin: " << stepSize * (numberOfThreads - 1) << " end: " << vectorSize << std::endl;
+    futures.emplace_back(std::async(dotProductAsyncFunc, vec1.begin() + stepSize * (numberOfFutures - 1), vec1.end(), vec2.begin()));
+
+    // wait for the futures to finish and add their return values together
+    fix_point result(0.f);
+    for (auto& future : futures)
+        result += future.get();
 
     return static_cast<float>(result);
 }
