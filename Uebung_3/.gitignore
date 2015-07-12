@@ -1,0 +1,5 @@
+# exclude build files
+/build*
+
+# exclude *.pro.user files
+*.pro.user
