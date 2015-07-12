@@ -17,7 +17,9 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp \
-    fix_point.cpp
+    fix_point.cpp \
+    clock.cpp
 
 HEADERS += \
-    fix_point.hpp
+    fix_point.hpp \
+    clock.hpp

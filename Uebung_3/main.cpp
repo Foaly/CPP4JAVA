@@ -7,13 +7,13 @@
 #include <cmath>        // std::floor
 
 #include "fix_point.hpp"
+#include "clock.hpp"
 
 std::vector<fix_point> threadResults;
 std::mutex resultMutex;
-
+using inputIterator = std::vector<fix_point>::iterator;
 
 // thread function
-using inputIterator = std::vector<fix_point>::iterator;
 void dotProductThreadFunc(inputIterator first1, inputIterator last1, inputIterator first2)
 {
     // calculate dot product
@@ -36,19 +36,23 @@ int main()
     std::vector<fix_point> vectorTwo;
     vectorTwo.insert(vectorTwo.begin(), vectorSize, fix_point(0.25f));
 
-    //dot product
+    Clock clock;
+    // calculate the dot product without threads
     fix_point dotProduct = std::inner_product(vectorOne.begin(), vectorOne.end(), vectorTwo.begin(), fix_point(0.f));
-
     std::cout << "Dot product: " << static_cast<float>(dotProduct) << std::endl;
+    std::cout << "Time to calculate normal dot product: " << clock.getElapsedTime().count() << " microseconds." << std::endl << std::endl;
 
+    Clock threadClock;
+    // get the number of hardware supported threads
     const unsigned int numberOfThreads = std::thread::hardware_concurrency();
     std::cout << numberOfThreads << " concurrent threads are supported." << std::endl;
 
+    // caculate how many elements per thread
     const unsigned int stepSize = std::floor(vectorSize / numberOfThreads);
 
+    // create the threads
     std::vector<std::thread> threads;
     threads.reserve(numberOfThreads);
-
     for(unsigned int i = 0; i < numberOfThreads - 1; ++i)
     {
         //std::cout << "begin: " << stepSize * i << " end: " << stepSize * (i + 1) << std::endl;
@@ -69,6 +73,7 @@ int main()
     // calculate the sum of the thread results
     fix_point result = std::accumulate(threadResults.begin(), threadResults.end(), fix_point(0.f));
     std::cout << "Thread dot products: " << static_cast<float>(result) << std::endl;
+    std::cout << "Time to calcualte threaded dot product: " << threadClock.getElapsedTime().count() << " microseconds." << std::endl;
 
     return 0;
 }
